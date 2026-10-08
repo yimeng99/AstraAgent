@@ -1,0 +1,25 @@
+# <类型>[(作用域)]: <中文标题，不超 50 字>
+#
+# 类型：feat | fix | docs | refactor | test | chore | perf | style | ci | revert
+# 作用域（可选）：core | subagent | feishu | lark_cli | wiki | doc |
+#               tools | config | llm | deps | ci | docs
+# 标题规则：动名词开头（新增/修复/调整），不加句号
+#
+# 正文（可选，空一行后写）：
+#   - 为什么改（动机）而不是改了什么
+#   - 列表描述要点，行宽 72
+#
+# 页脚（可选）：
+#   Closes #123 | Refs #456 | BREAKING CHANGE: <说明>
+#   Co-authored-by: Name <email>
+#
+# 示例：
+#   feat(lark_cli): 新增 Wiki + Docx 工具封装
+#
+#   为什么：lark-oapi SDK 维护成本高，鉴权不灵活。
+#   方案：调 lark-cli subprocess，复用其 OAuth 状态。
+#
+#   - 新增 feishu/utils/lark_cli/{client,wiki,doc}.py
+#   - LarkCli 自动映射异常：404 → FeishuNotFoundError
+#
+#   Closes #12

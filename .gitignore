@@ -1,0 +1,80 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+.eggs/
+build/
+dist/
+
+# 测试 / 覆盖率
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# 环境
+.venv/
+.env
+.env.*
+!.env.example
+!**/.env.example
+*.pem
+*.key
+.agents/
+.claude/
+deploy/docker/local.yaml
+.env.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Agent workspace（运行时数据）
+workspace/sessions/*/scratch/
+workspace/sessions/*/tool_cache/
+workspace/sessions/*/logs/
+!workspace/.gitkeep
+!workspace/sessions/.gitkeep
+!workspace/shared/.gitkeep
+
+# 脚本产物
+scripts/__pycache__/
+*.pyc
+
+# pre-commit + Node 工具链
+.pre-commit-cache/
+node_modules/
+package-lock.json
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# 运行时上传的文件（用户数据，绝不入库）
+workspace/uploads/
+
+# 工具/测试在仓库根目录产生的临时目录
+/tmp*/
+/pytest-of-*/
+
+# 智能体/AI 协作的缓存目录：临时脚本、截图、日志、验证产物全放这里
+# （约定见 AGENTS.md；只放行说明文件，其余一律不入库）
+# 注意必须写成 ".cache/*" —— 直接忽略 ".cache/" 的话 git 不会下探，
+# 后面的 !.cache/README.md 就永远不生效。
+.cache/*
+!.cache/README.md
+
+
+# 工具审批审计包含用户标识，运行数据不入库
+workspace/approval-audit.jsonl
+workspace/sandbox-state*.sqlite3*
+workspace/human-decisions.sqlite3*
+workspace/run-failures.sqlite3*
+workspace/*.sqlite3*
+/deploy/tracing/.env
+/deploy/litellm/.env

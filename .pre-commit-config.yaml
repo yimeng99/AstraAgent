@@ -1,0 +1,48 @@
+# pre-commit 配置
+# 安装：uv tool install pre-commit
+# 启用：pre-commit install
+# 手动跑全部文件：pre-commit run --all-files
+#
+# 文档：https://pre-commit.com/
+# hooks 仓库索引：https://github.com/pre-commit/pre-commit-hooks
+
+repos:
+  # ── 通用 hygiene ─────────────────────────────────────
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: [--maxkb=500]
+      - id: mixed-line-ending
+        args: [--fix=lf]
+
+  # ── Commit message 校验（commitlint）──────────────────
+  # 中文 + 自由标点；规则见 commitlint.config.cjs
+  # pre-commit 首次运行时会自动安装 commitlint（需联网）
+  - repo: https://github.com/algolia/pre-commit-algolia
+    rev: v4.0.0
+    hooks:
+      - id: commitlint
+        stages: [commit-msg]
+        additional_dependencies:
+          - "@commitlint/config-conventional@19.6.0"
+
+  # ── Python 静态检查（可选，未来加测试时启用）─────────
+  # - repo: https://github.com/astral-sh/ruff-pre-commit
+  #   rev: v0.6.9
+  #   hooks:
+  #     - id: ruff
+  #       args: [--fix, --exit-non-zero-on-fix]
+  #     - id: ruff-format
+  # - repo: https://github.com/pre-commit/mirrors-mypy
+  #   rev: v1.13.0
+  #   hooks:
+  #     - id: mypy
+  #       additional_dependencies: [pydantic, types-requests]
+  #       args: [--strict, --ignore-missing-imports]

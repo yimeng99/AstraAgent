@@ -1,0 +1,50 @@
+name: astra-agent
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: deploy/docker/backend.Dockerfile
+    image: astra-agent-backend:local
+    restart: unless-stopped
+    environment:
+      AGENT_WORKSPACE: /app/workspace
+      STORAGE_LOCAL_ROOT: /app/workspace/uploads
+      SANDBOX_USE_SERVER_PROXY: "true"
+    volumes:
+      # Let python-dotenv preserve the existing file's quoting and interpolation.
+      - ./.env:/app/.env:ro
+      - ./workspace:/app/workspace
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    healthcheck:
+      test: ["CMD", "/app/.venv/bin/python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health', timeout=5)"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
+    stop_grace_period: 60s
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: deploy/docker/frontend.Dockerfile
+    image: astra-agent-frontend:local
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"

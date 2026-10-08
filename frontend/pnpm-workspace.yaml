@@ -1,0 +1,8 @@
+allowBuilds:
+  # Clean Linux image builds need esbuild's native binary installation.
+  esbuild: true
+  "@parcel/watcher": false
+  "@vue-office/docx": true
+  "@vue-office/excel": true
+  "@vue-office/pdf": true
+  vue-demi: true

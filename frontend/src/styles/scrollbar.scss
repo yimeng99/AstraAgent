@@ -1,0 +1,22 @@
+.hover-scroll {
+  .el-scrollbar__bar {
+    opacity: 0;
+    transition: opacity 160ms ease;
+  }
+  &:hover .el-scrollbar__bar,
+  &:focus-within .el-scrollbar__bar {
+    opacity: 1;
+  }
+  .el-scrollbar__bar.is-vertical {
+    width: 5px;
+    right: 1px;
+  }
+  .el-scrollbar__thumb {
+    background: #aab4c3;
+  }
+}
+@media (hover: none) {
+  .hover-scroll .el-scrollbar__bar {
+    opacity: 1;
+  }
+}

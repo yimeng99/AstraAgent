@@ -1,0 +1,29 @@
+name: opensandbox
+services:
+  server:
+    build: .
+    image: astra-opensandbox-server:0.2.3
+    restart: unless-stopped
+    # 已有用户沙箱位于 Docker 默认 bridge；代理必须能访问它们的内部 IP。
+    network_mode: bridge
+    ports:
+      - "18080:18080"
+    env_file:
+      - .env.docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./sandbox.docker.toml:/etc/opensandbox/config.toml:ro
+      - ./docker-state:/data
+      # Docker 标签不能动态更新；归属及租约补丁单独持久化，不能只迁移 SQLite。
+      - ./docker-state/metadata:/root/.opensandbox/metadata
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:18080/health', timeout=5)"]
+      interval: 10s
+      timeout: 6s
+      retries: 6
+      start_period: 30s
+    stop_grace_period: 30s
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"

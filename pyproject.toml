@@ -1,0 +1,86 @@
+[project]
+name = "astra-agent"
+version = "0.1.0"
+description = "AstraAgent — 智能体框架 + 飞书对接"
+requires-python = ">=3.13"
+dependencies = [
+    "deepagents>=0.7.18",
+    "python-dotenv>=1.2.3",
+    "fastapi>=0.141.1",
+    "httpx>=0.28.1",
+    "langchain-mcp-adapters>=0.3.2",
+    "langchain-openai>=1.6.6",
+    "langgraph-checkpoint-postgres>=3.1.2",
+    "openpyxl>=3.1.5",
+    "opensandbox>=1.1.0",
+    "oss2>=2.19.1",
+    "psycopg[binary]>=3.3.6",
+    "pypdf>=6.19.0",
+    "python-docx>=1.2.0",
+    "reportlab>=5.0.1",
+    "sse-starlette>=3.4.11",
+    "structlog>=26.1.0",
+    "tenacity>=9.1.4",
+    "uvicorn>=0.54.0",
+    "langsmith>=0.14.0,<0.15",
+    "opentelemetry-sdk>=1.45.0",
+    "opentelemetry-exporter-otlp-proto-http>=1.45.0",
+    "openinference-instrumentation-langchain>=0.1.78",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "pytest-asyncio>=0.23",
+    "ruff>=0.6",
+    "mypy>=1.10",
+    "respx>=0.21",  # httpx mock for tests
+]
+
+[project.scripts]
+astra-agent = "core.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/core", "src/business", "src/ragwiki", "src/api"]
+
+# ── 工具配置 ────────────────────────────────────────────
+[tool.ruff]
+extend-exclude = ["tests/study"]
+line-length = 100
+target-version = "py313"
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "SIM", "RUF", "ASYNC", "TCH"]
+ignore = [
+    "E501",   # 由 formatter 控制行宽
+    "RUF001", # 允许 docstring 里的中文全角符号
+    "RUF002",
+    "RUF003",
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["core", "business", "ragwiki", "api"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["B008"]  # 测试里允许 fixture 函数调用
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+mypy_path = ["src"]
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+addopts = "-ra -q --strict-markers"
+testpaths = ["tests"]
+markers = [
+    "integration: 集成测试，需要外部依赖",
+    "unit: 单元测试",
+]
+asyncio_mode = "auto"
